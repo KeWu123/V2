@@ -1,0 +1,10 @@
+# Install the CUDA-compatible torch and torchvision builds for the server first.
+numpy
+scipy
+scikit-image
+h5py
+SimpleITK
+MedPy
+tensorboardX
+tqdm
+
