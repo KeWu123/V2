@@ -1,0 +1,8 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+
+data/PROMISE12/raw/training_data.zip filter=lfs diff=lfs merge=lfs -text
+data/PROMISE12/extracted/** filter=lfs diff=lfs merge=lfs -text
+model/** filter=lfs diff=lfs merge=lfs -text
