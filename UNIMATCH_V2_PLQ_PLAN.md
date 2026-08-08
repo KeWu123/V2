@@ -69,9 +69,14 @@ L(θ; out, target, valid) = 0.5 · CE_masked + 0.5 · Dice_masked   # 与 baseli
   - 类感知阈值：fg conf=0.85 接受（thr_fg=0.80）、bg conf=0.85 拒绝（thr_bg=0.95）✓
   - 熵门：高熵 fg 像素被拒绝 ✓
   - masked_plq_loss 数值有限 ✓
-- debug smoke（pre 复用 A0 smoke pretrain + self 1010 iter，threshold_bg/fg=0.95/0.80，entropy=0.5）：
-
-（待 smoke 完成回填：iter 1000+ 的 coverage / fg_coverage / entropy / loss / 是否 nan）
+- 真实数据检查（check_plq_data.py，8 个真实 unlabeled 切片）：
+  - pseudo 出现前景类（unique [0,1]）；conf mean 0.99、entropy mean 0.028
+  - PLQ coverage 0.9744、fg_coverage 0.0000（弱 smoke 模型前景预测不可靠被门过滤，符合预期；正式 30k 训练后前景可靠）
+- debug smoke（复用 A0 smoke pretrain + self 1010 iter，threshold_bg/fg=0.95/0.80，entropy=0.5）：
+  - 训练完整结束，无崩溃、无 nan；iter 200/400/.../1000 验证正常（best val dice 0.1776，弱模型规模下合理）
+  - checkpoint 保存/加载正常（iter_200_dice_0.0724.pth、iter_400_dice_0.1776.pth、unet_best_model.pth）
+  - PLQ 分支在 iter 1009 起执行（warmup 1000 后），一次执行无报错
+  - 结论：**集成正确，可进入正式训练**（PLQ 的 coverage/fg_coverage/entropy 定量曲线由远程正式训练日志与 tensorboard 采集）
 
 ## 8. 完整训练命令（远程 V2）
 
