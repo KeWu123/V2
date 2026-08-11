@@ -326,8 +326,10 @@ def rank_candidates(
 
     scoring_logits = model.decoder.out_conv(detached_features)
     logits_per_candidate = scoring_logits.chunk(args.num_candidates, dim=0)
+    if len(logits_per_candidate) != len(candidates):
+        raise ValueError("Candidate logits and metadata lengths do not match")
     scoring_losses = []
-    for logits, candidate in zip(logits_per_candidate, candidates, strict=True):
+    for logits, candidate in zip(logits_per_candidate, candidates):
         loss, _ = base.confidence_masked_baseline_loss(
             logits, candidate["targets"], candidate["confidence"], dice_loss
         )

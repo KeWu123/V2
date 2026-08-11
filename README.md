@@ -113,3 +113,36 @@ UTILITYMATCH_DIR=/absolute/path/to/run bash test_frontiermatch_5090.sh
 
 See `docs/` for the implementation protocols and the Chinese method summary.
 
+## Trajectory-reliability experiments
+
+The trajectory branch tests whether prediction dynamics should control
+semi-supervised trust. All modes share one trainer and the fixed UniMatch
+protocol:
+
+```bash
+bash run_tr_baseline_5090.sh
+bash run_tr_weighting_5090.sh
+bash run_tr_adaptive_5090.sh
+bash run_tr_weighting_adaptive_5090.sh
+bash run_tr_full_5090.sh
+```
+
+Set `DATA_ROOT`, `ORIGINAL_UNIMATCH_DIR`, `GPU`, `REQUIRE_5090`, and `DETACH`
+in the same way as UtilityMatch. The complete suite can be run serially with
+`run_trajectory_ablation_suite_5090.sh`; it intentionally never launches the
+five jobs concurrently.
+
+Run the frozen signal-quality diagnostic before interpreting training gains:
+
+```bash
+bash diagnose_trajectory_reliability_5090.sh
+```
+
+Evaluate a completed mode with:
+
+```bash
+TRAJECTORY_MODE=full bash test_trajectory_reliability_5090.sh
+```
+
+The method definition, controlled ablations, and interpretation limits are in
+`docs/trajectory_reliability_protocol.md`.

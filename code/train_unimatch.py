@@ -419,13 +419,18 @@ def get_current_consistency_weight(epoch):
     return 5 * args.consistency * ramps.sigmoid_rampup(epoch, args.consistency_rampup)
 
 
-# The UniMatch experiment inherits the EMA update from the supplied baseline.
 def update_model_ema(model, ema_model, alpha):
     model_state = model.state_dict()
     model_ema_state = ema_model.state_dict()
     new_dict = {}
     for key in model_state:
-        new_dict[key] = alpha * model_ema_state[key] + (1 - alpha) * model_state[key]
+        if torch.is_floating_point(model_state[key]):
+            new_dict[key] = (
+                alpha * model_ema_state[key]
+                + (1 - alpha) * model_state[key]
+            )
+        else:
+            new_dict[key] = model_state[key]
     ema_model.load_state_dict(new_dict)
 
 
@@ -602,6 +607,7 @@ def self_train(args, pre_snapshot_path, snapshot_path):
                              num_workers=4, pin_memory=True, worker_init_fn=worker_init_fn)
 
     model.train()
+    ema_model.train()
 
     valloader = DataLoader(db_val, batch_size=1, shuffle=False,
                            num_workers=1)

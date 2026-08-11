@@ -1,0 +1,23 @@
+project: trajectory-reliability-promis12
+question: >-
+  Can prediction evolution control semi-supervised trust better than
+  instantaneous confidence and fixed schedules?
+status: implementation_complete_numerical_runs_pending
+locked_protocol:
+  split: 35/5/10
+  labeled_cases: 7
+  labeled_slices: 191
+  train_slices: 940
+  seed: 1337
+  pretrain_iterations: 10000
+  self_train_iterations: 30000
+hypotheses:
+  H1_weighting: pending
+  H2_adaptive_lambda: pending
+  H3_weighting_adaptive: pending
+  H4_soft_boundary: pending
+diagnostic:
+  confidence_vs_trajectory_auroc: pending
+primary_metric: test_dice
+secondary_metrics: [jaccard, hd95, asd, per_case_dice]
+
